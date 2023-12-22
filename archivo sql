@@ -1,0 +1,111 @@
+CREATE TABLE `trabajadores` (
+  `id_trabajador` int PRIMARY KEY,
+  `nombre` varchar(255),
+  `apellido` varchar(255),
+  `telefono` int,
+  `correo` varchar(255),
+  `direccion` varchar(255),
+  `funcion` varchar(255),
+  `sueldo` int,
+  `cbu` int
+);
+
+CREATE TABLE `consejo_directivo` (
+  `id_directivo` int PRIMARY KEY,
+  `nombre` varchar(255),
+  `apellido` varchar(255),
+  `telefono` int,
+  `correo` varchar(255),
+  `direccion` varchar(255),
+  `funcion` varchar(255)
+);
+
+CREATE TABLE `cuentas_bancarias` (
+  `id_cuenta` int PRIMARY KEY,
+  `banco` varchar(30),
+  `sucursal` varchar(255),
+  `numero_cuenta` int,
+  `tipo` int,
+  `saldo` int
+);
+
+CREATE TABLE `flujo_de_caja` (
+  `id_pago` int PRIMARY KEY,
+  `id_cuenta` int,
+  `id_trabajador` varchar(255),
+  `monto` int,
+  `tipo` int
+);
+
+CREATE TABLE `miembros` (
+  `id_miembro` int PRIMARY KEY,
+  `nombre` varchar(255),
+  `apellido` varchar(255),
+  `correo` varchar(255),
+  `telefono` int,
+  `barrio` varchar(30),
+  `centro_jubilados` varchar(30)
+);
+
+CREATE TABLE `inscripciones` (
+  `id_inscripcion` int PRIMARY KEY,
+  `id_miembro` varchar(255),
+  `id_actividad` varchar(255),
+  `fecha_inscripcion` datetime
+);
+
+CREATE TABLE `actividades` (
+  `id_actividad` int PRIMARY KEY,
+  `nombre_actividad` varchar(255),
+  `id_sede` varchar(255),
+  `id_trabajador` varchar(255),
+  `horario_actividad` varchar(255),
+  `capacidad_taller` int
+);
+
+CREATE TABLE `sedes` (
+  `id_sede` int PRIMARY KEY,
+  `direccion_sede` varchar(255),
+  `correo_sede` varchar(255),
+  `telefono_sede` int,
+  `codigo_postal` varchar(255)
+);
+
+ALTER TABLE `flujo_de_caja` ADD FOREIGN KEY (`id_cuenta`) REFERENCES `cuentas_bancarias` (`id_cuenta`);
+
+ALTER TABLE `flujo_de_caja` ADD FOREIGN KEY (`id_trabajador`) REFERENCES `trabajadores` (`id_trabajador`);
+
+CREATE TABLE `miembros_inscripciones` (
+  `miembros_id_miembro` int,
+  `inscripciones_id_miembro` varchar(50),
+  PRIMARY KEY (`miembros_id_miembro`, `inscripciones_id_miembro`)
+);
+
+ALTER TABLE `miembros_inscripciones` ADD FOREIGN KEY (`miembros_id_miembro`) REFERENCES `miembros` (`id_miembro`);
+
+ALTER TABLE `miembros_inscripciones` ADD FOREIGN KEY (`inscripciones_id_miembro`) REFERENCES `inscripciones` (`id_miembro`);
+
+
+CREATE TABLE `actividades_inscripciones` (
+  `actividades_id_actividad` int,
+  `inscripciones_id_actividad` varchar(50),
+  PRIMARY KEY (`actividades_id_actividad`, `inscripciones_id_actividad`)
+);
+
+ALTER TABLE `actividades_inscripciones` ADD FOREIGN KEY (`actividades_id_actividad`) REFERENCES `actividades` (`id_actividad`);
+
+ALTER TABLE `actividades_inscripciones` ADD FOREIGN KEY (`inscripciones_id_actividad`) REFERENCES `inscripciones` (`id_actividad`);
+
+
+ALTER TABLE `actividades` ADD FOREIGN KEY (`id_sede`) REFERENCES `sedes` (`id_sede`);
+
+CREATE TABLE `trabajadores_actividades` (
+  `trabajadores_id_trabajador` int,
+  `actividades_id_trabajador` varchar(50),
+  PRIMARY KEY (`trabajadores_id_trabajador`, `actividades_id_trabajador`)
+);
+
+ALTER TABLE `trabajadores_actividades` ADD FOREIGN KEY (`trabajadores_id_trabajador`) REFERENCES `trabajadores` (`id_trabajador`);
+
+ALTER TABLE `trabajadores_actividades` ADD FOREIGN KEY (`actividades_id_trabajador`) REFERENCES `actividades` (`id_trabajador`);
+
